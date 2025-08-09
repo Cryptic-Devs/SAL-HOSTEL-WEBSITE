@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function BookingPage() {
   return (
     <BookingWrapper subTitle="Booking">
-      <div className="absolute top-2 right-6">
+      <div className="absolute top-26 md:top-2 right-6">
         <Link href="/signIn">
           <button className="font-bold hover:bg-gray-100 rounded-lg p-2 cursor-pointer active:bg-gray-200 active:scale-95">Sign In</button>
         </Link>
