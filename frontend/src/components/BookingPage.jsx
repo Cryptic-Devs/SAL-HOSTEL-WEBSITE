@@ -23,54 +23,57 @@ export default function BookingPage() {
       <h1 className="font-bold mb-10">Student Information</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          type="text"
-          placeholder="First Name"
-          className="rounded-sm py-2 border-1 border-black focus:border-blue-600 focus:outline-none w-full max-w-xsm"
-        />
 
-        <input
-          type="text"
-          placeholder="Last Name"
-          className="rounded-sm py-2 border-1 border-black focus:border-blue-600 focus:outline-none w-full max-w-xsm"
-        />
+        <div>
+          <label className="block text-sm font-medium mb-1">First Name</label>
+          <input type="text" className="w-full p-2 border border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none max-w-xsm" placeholder="Enter your first name" />
+        </div>
 
-        <input
-          type="text"
-          placeholder="Student ID"
-          className="rounded-sm py-2 border-1 border-black focus:border-blue-600 focus:outline-none w-full max-w-xsm"
-        />
+        <div>
+          <label className="block text-sm font-medium mb-1">Last Name</label>
+          <input type="text" className="w-full p-2 border border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none max-w-xsm" placeholder="Enter your last name" />
+        </div>
 
-        <input
-          type="text"
-          placeholder="Contact Number"
-          className="rounded-sm py-2 border-1 border-black focus:border-blue-600 focus:outline-none w-full max-w-xsm"
-        />
+        <div>
+          <label className="block text-sm font-medium mb-1">Student ID</label>
+          <input type="text" className="w-full p-2 border border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none max-w-xsm" placeholder="Enter your Student ID" />
+        </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="rounded-sm py-2 border-1 border-black focus:border-blue-600 focus:outline-none w-full max-w-xsm"
-        />
+        <div>
+          <label className="block text-sm font-medium mb-1">Contact Number</label>
+          <input type="text" className="w-full p-2 border border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none max-w-xsm" placeholder="Enter your contact" />
+        </div>
 
-        <input
-          type="text"
-          placeholder="Level"
-          className="rounded-sm py-2 border-1 border-black focus:border-blue-600 focus:outline-none w-full max-w-xsm"
-        />
+        <div>
+          <label className="block text-sm font-medium mb-1">Email</label>
+          <input type="email" className="border border-gray-300 w-full p-2 rounded-lg focus:border-blue-600 focus:outline-none max-w-xsm" placeholder="Enter your Email" />
+        </div>
 
-        <input
-          type="text"
-          placeholder="Program of Study"
-          className="rounded-sm py-2 border-1 border-black focus:border-blue-600 focus:outline-none w-full max-w-xsm"
-        />
+        <div>
+          <label className="block text-sm font-medium mb-1">Level</label>
+          <input type="text" className="border-gray-300 w-full p-2 border rounded-lg focus:border-blue-600 focus:outline-none max-w-xsm" placeholder="Enter current level" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Program Of Study</label>
+          <input type="text" className="w-full p-2 border-gray-300 border rounded-lg focus:border-blue-600 focus:outline-none max-w-xsm" placeholder="Enter your program of study" />
+        </div>
+
         <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            className="rounded-sm py-2 border-1 border-black focus:border-blue-600 focus:outline-none w-full max-w-xsm"
-            placeholder="Password"
-          />
-          <button onClick={toggleShowPassword} className="absolute top-2.5 right-1 cursor-pointer">
+          <div>
+            <label className="block text-sm font-medium mb-1">Password</label>
+            <input
+              type={showPassword ? "text" : "password"}
+              className="w-full p-2 pr-10 border border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none max-w-xsm"
+              placeholder="Create an eight digit password"
+            />
+
+          </div>
+          <button
+            onClick={toggleShowPassword}
+            className="absolute top-[2.25rem] right-2 cursor-pointer"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
