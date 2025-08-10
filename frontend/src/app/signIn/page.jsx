@@ -1,72 +1,98 @@
-import Image from 'next/image'
+// /app/signIn/page.jsx
 
-export default function SignIn() {
+'use client';
+import React, { useState } from 'react';
+import BookingWrapper from '@/components/BookingWrapper';
+import Link from 'next/link';
+
+const SignIn = () => {
+  const [studentId, setStudentId] = useState('');
+  const [password, setPassword] = useState('');
+  const [idError, setIdError] = useState('');
+
+  const validateStudentId = (id) => {
+    const isValid = /^\d{8}$/.test(id);
+    setIdError(isValid ? '' : 'Student ID must be exactly 8 digits.');
+    return isValid;
+  };
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    if (validateStudentId(studentId)) {
+      // Add logic to handle sign-in (API call, etc.)
+      alert('Signing in...');
+    }
+  };
+
   return (
-    <div className="flex h-screen">
-      <div
-        className="w-1/3 bg-cover bg-center"
-        style={{ backgroundImage: "url('/sal-frontview.png')" }}
-      >
-        <div className="absolute left-10 text-white space-y-2 bg-opacity-50 rounded">
-          <h1 className="text-3xl font-bold">Sal Hostel</h1>
-          <p className="text-1xl">Sign In</p>
-        </div>
-      </div>
-       <div className="w-2/3 flex flex-col justify-center items-center bg-[#fcf8f9] px-8">
-        <div className="w-full max-w-md">
-          <a href="#" className="text-sm mb-6 inline-block text-black hover:underline">
-            ← Go Back
-          </a>
-          <h1 className="text-2xl font-bold text-center mb-8">SAL HOSTEL STUDENT PORTAL</h1>
+    <BookingWrapper subTitle= "Sign In">
+      <div className="flex flex-col justify-center items-center w-full min-h-screen px-6">
+        <div className="w-full max-w-xl bg-white p-10 rounded-md shadow-md">
+          <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">
+            SAL HOSTEL STUDENT PORTAL
+          </h2>
 
-          <form className="space-y-6">
+          <form onSubmit={handleSignIn} className="space-y-6">
             <div>
-              <label htmlFor="studentID" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1">
                 Student ID
               </label>
               <input
+                id="studentId"
+                name="studentId"
                 type="text"
-                id="studentID"
-                name="studentID"
-                className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:ring-red-500"
+                maxLength={8}
+                value={studentId}
+                onChange={(e) => {
+                  setStudentId(e.target.value);
+                  validateStudentId(e.target.value);
+                }}
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="Enter your ID"
               />
+              {idError && <p className="text-red-500 text-sm mt-1">{idError}</p>}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
               <input
-                type="password"
                 id="password"
                 name="password"
-                className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:ring-red-500"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                placeholder="Enter your password"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded text-lg font-medium"
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
             >
               Sign In
             </button>
+
+            <div className="text-center">
+              <Link href="/forgot-password">
+                <span className="text-blue-600 hover:underline text-sm">Forgot Password?</span>
+              </Link>
+            </div>
+
+            <div className="text-center text-sm text-gray-600">
+              Not a Resident? Click{' '}
+              <Link href="/booking">
+                <span className="text-blue-600 hover:underline">here</span>
+              </Link>{' '}
+              to book a room.
+            </div>
           </form>
-
-          <div className="text-center mt-4 text-sm">
-            <a href="#" className="text-gray-700 hover:underline">
-              Forgot Password?
-            </a>
-          </div>
-
-          <div className="text-center mt-2 text-sm">
-            Not a Resident? Click{' '}
-            <a href="#" className="text-blue-600 hover:underline">
-              here
-            </a>{' '}
-            to book a room.
-          </div>
         </div>
       </div>
-    </div>
+    </BookingWrapper>
   );
-}
+};
+
+export default SignIn;
