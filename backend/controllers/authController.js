@@ -1,10 +1,9 @@
-// controllers/authController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../models/database');
 
-// JWT Secret (should be in environment variables)
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+// JWT Secret 
+const JWT_SECRET = process.env.JWT_SECRET;
 
 class AuthController {
   // User Registration (Student, Admin, Staff)
