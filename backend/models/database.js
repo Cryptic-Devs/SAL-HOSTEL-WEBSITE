@@ -1,4 +1,3 @@
-// models/database.js
 const mysql = require('mysql2');
 const util = require('util');
 
@@ -19,7 +18,7 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Promisify pool.query for async/await usage
+
 const query = util.promisify(pool.query).bind(pool);
 
 // Test database connection
