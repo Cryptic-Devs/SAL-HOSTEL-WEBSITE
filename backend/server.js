@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -25,7 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Static file serving
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-// Create upload directories if they don't exist
+
 const uploadDirs = [
   'public/uploads',
   'public/uploads/admission_letters',
