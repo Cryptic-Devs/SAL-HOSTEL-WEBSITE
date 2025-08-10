@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardWrapper from '@/components/DashboardWrapper';
@@ -19,11 +21,11 @@ export default function ProfilePage() {
 
   // Navigate to edit pages
   const goToEditProfile = () => {
-    router.push('/editprofile');
+    router.push('/dashboard/profile/edit-profile');
   };
 
   const goToEditPassword = () => {
-    router.push('/editpassword');
+    router.push('/dashboard/profile/edit-password');
   };
 
   return (
