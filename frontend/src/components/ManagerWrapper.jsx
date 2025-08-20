@@ -5,24 +5,22 @@ import Link from "next/link";
 import { 
   LayoutDashboard, 
   User, 
-  Bed, 
-  AlertCircle, 
-  FileText,
-  Bell, 
+  Landmark, 
+  Megaphone, 
+  Dock, 
   LogOut 
 } from "lucide-react";
 
-export default function DashboardWrapper({ children }) {
+export default function ManagerWrapper({ children }) {
   const router = useRouter();
   const pathname = usePathname();
 
   const navLinks = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/dashboard/profile', label: 'Profile', icon: User },
-    { href: '/dashboard/available-beds', label: 'View Available Beds', icon: Bed },
-    { href: '/dashboard/report-fault', label: 'Report Fault', icon: AlertCircle },
-    { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
-    { href: '/dashboard/policies', label: 'Policies', icon: FileText },
+    { href: '/manager-dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/manager-dashboard/manager-profile', label: 'Manager Profile', icon: User },
+    { href: '/manager-dashboard/hostel-policy-management', label: 'Hostel Policy Management', icon: Landmark },
+    { href: '/manager-dashboard/booking-management', label: 'Booking Mangement', icon: Dock },
+    { href: '/manager-dashboard/manager-notifications', label: 'Notifications & Announcements', icon: Megaphone },
   ];
 
   const handleSignOut = () => {
@@ -46,7 +44,7 @@ export default function DashboardWrapper({ children }) {
 
         <div className="relative z-10 p-3 md:p-6">
           <h1 className="text-white text-lg md:text-3xl font-bold">Sal Hostel</h1>
-          <p className="text-white text-sm md:text-base font-medium">Student Dashboard</p>
+          <p className="text-white text-sm md:text-base font-medium">Manager Dashboard</p>
 
           {/* Navigation Links - Only visible on desktop in sidebar */}
           <nav className="hidden md:block mt-8 space-y-2">
