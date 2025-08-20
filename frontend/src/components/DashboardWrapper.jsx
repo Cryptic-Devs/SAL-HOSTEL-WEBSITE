@@ -7,7 +7,8 @@ import {
   User, 
   Bed, 
   AlertCircle, 
-  FileText, 
+  FileText,
+  Bell, 
   LogOut 
 } from "lucide-react";
 
@@ -20,6 +21,7 @@ export default function DashboardWrapper({ children }) {
     { href: '/dashboard/profile', label: 'Profile', icon: User },
     { href: '/dashboard/available-beds', label: 'View Available Beds', icon: Bed },
     { href: '/dashboard/report-fault', label: 'Report Fault', icon: AlertCircle },
+    { href: '/dashboard/notifications', label: 'Notifications', icon: Bell },
     { href: '/dashboard/policies', label: 'Policies', icon: FileText },
   ];
 
