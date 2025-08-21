@@ -1,3 +1,9 @@
+"scripts": {
+  "start": "react-scripts start",
+  "build": "react-scripts build",
+  "test": "react-scripts test",
+  "eject": "react-scripts eject"
+}
 {
   "dependencies": {
     "bcryptjs": "^3.0.2",
