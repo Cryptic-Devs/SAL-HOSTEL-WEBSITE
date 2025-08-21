@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function BookingWrapper({ subTitle, children }) {
   const router = useRouter();
@@ -20,7 +21,9 @@ export default function BookingWrapper({ subTitle, children }) {
         <div className="absolute inset-0 bg-gradient-to-tl from-red-500/30 to-blue-700/30" />
 
         <div className="relative z-10 p-3 md:p-6">
-          <h1 className="text-white text-lg md:text-3xl font-bold">Sal Hostel</h1>
+          <Link href="/">
+            <h1 className="text-white text-lg md:text-3xl font-bold hover:text-white/80 active:scale-99 active:text-white">Sal Hostel</h1>
+          </Link>
           <p className="text-white text-sm md:text-lg font-medium">{subTitle}</p>
         </div>
       </div>
