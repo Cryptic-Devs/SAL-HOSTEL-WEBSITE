@@ -1,5 +1,6 @@
 const mysql = require('mysql2');
 const util = require('util');
+const fs = require('fs');
 
 // Database configuration
 const dbConfig = {
@@ -7,7 +8,11 @@ const dbConfig = {
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'hostel_management',
-  charset: 'utf8mb4'
+  charset: 'utf8mb4',
+  ssl: {
+    ca: fs.readFileSync(process.env.CA)
+  }
+
 };
 
 // Create connection pool for better performance

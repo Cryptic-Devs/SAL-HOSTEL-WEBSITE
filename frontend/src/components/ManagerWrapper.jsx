@@ -4,8 +4,8 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { 
   LayoutDashboard, 
-  User, 
-  Landmark, 
+  User,
+  LibraryBig, 
   Megaphone, 
   Dock, 
   LogOut 
@@ -18,7 +18,7 @@ export default function ManagerWrapper({ children }) {
   const navLinks = [
     { href: '/manager-dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/manager-dashboard/manager-profile', label: 'Manager Profile', icon: User },
-    { href: '/manager-dashboard/hostel-policy-management', label: 'Hostel Policy Management', icon: Landmark },
+    { href: '/manager-dashboard/student-records', label: 'Student Records', icon: LibraryBig },
     { href: '/manager-dashboard/booking-management', label: 'Booking Mangement', icon: Dock },
     { href: '/manager-dashboard/manager-notifications', label: 'Notifications & Announcements', icon: Megaphone },
   ];
