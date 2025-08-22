@@ -30,8 +30,9 @@ const SignIn = () => {
     try {
       // Call backend login API
       const response = await api.post('/login', {
-        studentId,
+        student_id: studentId,
         password,
+        user_type: 'student',
       });
 
       // Store token in localStorage

@@ -11,13 +11,25 @@ class AuthController {
       const { user_type = 'student' } = req.body;
 
       if (user_type === 'student') {
-        const { first_name, last_name, gender, contact_number, email, level, program_of_study, password } = req.body;
+        const { student_id, first_name, last_name, gender, contact_number, email, level, program_of_study, password } = req.body;
 
-        if (!first_name || !last_name || !gender || !contact_number || !email || !level || !program_of_study || !password) {
+        if (!student_id || !first_name || !last_name || !gender || !contact_number || !email || !level || !program_of_study || !password) {
           return res.status(400).json({ success: false, message: 'Missing required student fields' });
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Validate student_id: must be exactly 8 digits
+        const studentIdRegex = /^\d{8}$/;
+        if (!studentIdRegex.test(student_id)) {
+          return res.status(400).json({ success: false, message: 'Student ID must be exactly 8 digits' });
+        }
+
+        // Check uniqueness of student_id
+        const existingId = await db.query('SELECT student_id FROM Student WHERE student_id = ?', [student_id]);
+        if (existingId.length > 0) {
+          return res.status(400).json({ success: false, message: 'Student ID already registered' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^"]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) return res.status(400).json({ success: false, message: 'Invalid email format' });
         if (password.length < 6) return res.status(400).json({ success: false, message: 'Password too short' });
 
@@ -25,10 +37,11 @@ class AuthController {
         if (existingUser.length > 0) return res.status(400).json({ success: false, message: 'Email already registered' });
 
         const password_hash = await bcrypt.hash(password, 12);
+        // Insert student with student_id
         await db.query(
-          `INSERT INTO Student (first_name, last_name, gender, contact_number, email, level, program_of_study, password_hash) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [first_name, last_name, gender, contact_number, email, level, program_of_study, password_hash]
+          `INSERT INTO Student (student_id, first_name, last_name, gender, contact_number, email, level, program_of_study, password_hash) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [student_id, first_name, last_name, gender, contact_number, email, level, program_of_study, password_hash]
         );
 
         return res.status(201).json({ success: true, message: 'Student registered successfully' });
@@ -88,24 +101,39 @@ class AuthController {
   // Login
   static async login(req, res) {
     try {
-      const { email, password, user_type = 'student' } = req.body;
+      const { student_id, email, password, user_type = 'student' } = req.body;
 
-      if (!email || !password) {
-        return res.status(400).json({ success: false, message: 'Email and password are required' });
+      let query, users;
+      if (user_type === 'student') {
+        if (!student_id || !password) {
+          return res.status(400).json({ success: false, message: 'Student ID and password are required' });
+        }
+        query = 'SELECT student_id as user_id, first_name, last_name, email, password_hash FROM Student WHERE student_id = ?';
+        users = await db.query(query, [student_id]);
+        if (users.length === 0) return res.status(401).json({ success: false, message: 'Invalid student ID or password' });
+      } else if (user_type === 'admin') {
+        if (!email || !password) {
+          return res.status(400).json({ success: false, message: 'Email and password are required' });
+        }
+        query = 'SELECT admin_id as user_id, name, email, password_hash, role FROM Admin WHERE email = ?';
+        users = await db.query(query, [email]);
+        if (users.length === 0) return res.status(401).json({ success: false, message: 'Invalid email or password' });
+      } else if (user_type === 'staff') {
+        if (!email || !password) {
+          return res.status(400).json({ success: false, message: 'Email and password are required' });
+        }
+        query = 'SELECT staff_id as user_id, name, email, password_hash, role, department FROM Staff WHERE email = ?';
+        users = await db.query(query, [email]);
+        if (users.length === 0) return res.status(401).json({ success: false, message: 'Invalid email or password' });
+      } else {
+        return res.status(400).json({ success: false, message: 'Invalid user_type' });
       }
-
-      let query;
-      if (user_type === 'student') query = 'SELECT student_id as user_id, first_name, last_name, email, password_hash FROM Student WHERE email = ?';
-      else if (user_type === 'admin') query = 'SELECT admin_id as user_id, name, email, password_hash, role FROM Admin WHERE email = ?';
-      else if (user_type === 'staff') query = 'SELECT staff_id as user_id, name, email, password_hash, role, department FROM Staff WHERE email = ?';
-      else return res.status(400).json({ success: false, message: 'Invalid user_type' });
-
-      const users = await db.query(query, [email]);
-      if (users.length === 0) return res.status(401).json({ success: false, message: 'Invalid email or password' });
 
       const user = users[0];
       const isValidPassword = await bcrypt.compare(password, user.password_hash);
-      if (!isValidPassword) return res.status(401).json({ success: false, message: 'Invalid email or password' });
+      if (!isValidPassword) {
+        return res.status(401).json({ success: false, message: user_type === 'student' ? 'Invalid student ID or password' : 'Invalid email or password' });
+      }
 
       const token = jwt.sign({ user_id: user.user_id, email: user.email, user_type }, JWT_SECRET, { expiresIn: '24h' });
       delete user.password_hash;

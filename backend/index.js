@@ -4,6 +4,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const roomRoutes = require('./routes/roomRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const apiRoutes = require('./routes/index');
 const sequelize = require('./config/db'); // Sequelize connection
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api', apiRoutes);
 
 // ✅ Test DB connection & sync models
 sequelize.authenticate()
