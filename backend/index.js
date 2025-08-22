@@ -8,6 +8,7 @@ const sequelize = require('./config/db'); // Sequelize connection
 
 const app = express();
 
+// Middleware
 app.use(express.json());
 app.use(cors());
 
@@ -25,13 +26,8 @@ sequelize.sync({ alter: true }) // auto create/update tables
   .then(() => console.log("✅ Models synced"))
   .catch(err => console.error("❌ Sync error:", err));
 
-const express = require('express');
-const app = express();
-
-// Middleware, routes, etc.
-app.use(express.json());
-
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(Server running on port ${PORT});
+  console.log(`🚀 Server running on port ${PORT}`);
 });
