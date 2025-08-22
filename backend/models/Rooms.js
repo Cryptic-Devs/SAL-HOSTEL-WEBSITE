@@ -5,31 +5,31 @@ const Room = sequelize.define('Room', {
   roomNumber: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
   },
   type: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false, // e.g., single, double, suite
   },
   capacity: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
   occupied: {
     type: DataTypes.INTEGER,
-    defaultValue: 0
+    defaultValue: 0,
   },
   price: {
     type: DataTypes.FLOAT,
-    allowNull: false
+    allowNull: false,
   },
   status: {
     type: DataTypes.ENUM('available', 'occupied', 'maintenance'),
-    defaultValue: 'available'
-  }
+    defaultValue: 'available',
+  },
 }, {
   timestamps: true,
-  tableName: 'rooms'
+  tableName: 'rooms',
 });
 
 module.exports = Room;

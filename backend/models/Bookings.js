@@ -6,19 +6,19 @@ const Room = require('./Room');
 const Booking = sequelize.define('Booking', {
   checkInDate: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
   },
   checkOutDate: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
   },
   status: {
     type: DataTypes.ENUM('booked', 'approved', 'checked-in', 'checked-out'),
-    defaultValue: 'booked'
-  }
+    defaultValue: 'booked',
+  },
 }, {
   timestamps: true,
-  tableName: 'bookings'
+  tableName: 'bookings',
 });
 
 // ✅ Associations
