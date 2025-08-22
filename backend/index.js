@@ -1,18 +1,27 @@
+require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+const authRoutes = require('./routes/authRoutes');
+const roomRoutes = require('./routes/roomRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
+const sequelize = require('./config/db'); // Sequelize connection
 
-dotenv.config();
 const app = express();
+
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("MongoDB connected"))
-    .catch(err => console.log(err));
+// ✅ Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/rooms', roomRoutes);
+app.use('/api/bookings', bookingRoutes);
 
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/rooms', require('./routes/roomRoutes'));
-app.use('/api/bookings', require('./routes/bookingRoutes'));
+// ✅ Test DB connection & sync models
+sequelize.authenticate()
+  .then(() => console.log("✅ MySQL connected"))
+  .catch(err => console.error("❌ DB connection error:", err));
+
+sequelize.sync({ alter: true }) // creates/updates tables automatically
+  .then(() => console.log("✅ Models synced"))
+  .catch(err => console.error("❌ Sync error:", err));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

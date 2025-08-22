@@ -1,11 +1,31 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
+const User = require('./User');
+const Room = require('./Room');
 
-const bookingSchema = new mongoose.Schema({
-    studentId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    roomId: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
-    checkInDate: { type: Date, required: true },
-    checkOutDate: { type: Date, required: true },
-    status: { type: String, default: 'booked' } // booked, checked-in, checked-out
-}, { timestamps: true });
+const Booking = sequelize.define('Booking', {
+  checkInDate: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  checkOutDate: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  status: {
+    type: DataTypes.ENUM('booked', 'approved', 'checked-in', 'checked-out'),
+    defaultValue: 'booked'
+  }
+}, {
+  timestamps: true,
+  tableName: 'bookings'
+});
 
-module.exports = mongoose.model('Booking', bookingSchema);
+// ✅ Associations
+User.hasMany(Booking, { foreignKey: 'studentId' });
+Booking.belongsTo(User, { foreignKey: 'studentId' });
+
+Room.hasMany(Booking, { foreignKey: 'roomId' });
+Booking.belongsTo(Room, { foreignKey: 'roomId' });
+
+module.exports = Booking;
