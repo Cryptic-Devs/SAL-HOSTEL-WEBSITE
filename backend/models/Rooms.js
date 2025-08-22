@@ -1,12 +1,35 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
 
-const roomSchema = new mongoose.Schema({
-    roomNumber: { type: String, required: true, unique: true },
-    type: { type: String, required: true }, // e.g., single, double
-    capacity: { type: Number, required: true },
-    occupied: { type: Number, default: 0 },
-    price: { type: Number, required: true },
-    status: { type: String, default: 'available' } // available, occupied, maintenance
-}, { timestamps: true });
+const Room = sequelize.define('Room', {
+  roomNumber: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false, // e.g., single, double, suite
+  },
+  capacity: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  occupied: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  price: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  status: {
+    type: DataTypes.ENUM('available', 'occupied', 'maintenance'),
+    defaultValue: 'available',
+  },
+}, {
+  timestamps: true,
+  tableName: 'rooms',
+});
 
-module.exports = mongoose.model('Room', roomSchema);
+module.exports = Room;
