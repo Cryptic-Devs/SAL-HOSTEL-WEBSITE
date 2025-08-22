@@ -9,11 +9,9 @@ const dbConfig = {
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'hostel_management',
   charset: 'utf8mb4',
-  ssl: {
-    ca: fs.readFileSync(process.env.CA)
-  }
-
+  ssl: process.env.CA ? { ca: fs.readFileSync(process.env.CA) } : undefined
 };
+
 
 // Create connection pool for better performance
 const pool = mysql.createPool({
