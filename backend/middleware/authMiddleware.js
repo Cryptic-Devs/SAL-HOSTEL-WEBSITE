@@ -23,3 +23,34 @@ function adminOnly(req, res, next) {
 }
 
 module.exports = { protect, adminOnly };
+
+const jwt = require('jsonwebtoken');
+
+// Secret key (store in .env in production)
+const SECRET = 'supersecretkey';
+
+function authMiddleware(requiredRole) {
+    return (req, res, next) => {
+        const token = req.headers['authorization']?.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ error: 'No token provided' });
+        }
+
+        jwt.verify(token, SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ error: 'Invalid token' });
+            }
+
+            req.user = decoded; // { id, role }
+            
+            if (requiredRole && req.user.role !== requiredRole) {
+                return res.status(403).json({ error: 'Access denied' });
+            }
+
+            next();
+        });
+    };
+}
+
+module.exports = { authMiddleware, SECRET };
