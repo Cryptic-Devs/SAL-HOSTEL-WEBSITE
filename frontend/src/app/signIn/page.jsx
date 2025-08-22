@@ -1,14 +1,18 @@
-// /app/signIn/page.jsx
-
 'use client';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import BookingWrapper from '@/components/BookingWrapper';
 import Link from 'next/link';
+import api from '@/lib/api';
 
 const SignIn = () => {
+  const router = useRouter();
+
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
   const [idError, setIdError] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const validateStudentId = (id) => {
     const isValid = /^\d{8}$/.test(id);
@@ -16,16 +20,43 @@ const SignIn = () => {
     return isValid;
   };
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    if (validateStudentId(studentId)) {
-      // Add logic to handle sign-in (API call, etc.)
-      alert('Signing in...');
+    setError('');
+
+    if (!validateStudentId(studentId)) return;
+
+    setLoading(true);
+    try {
+      // Call backend login API
+      const response = await api.post('/login', {
+        studentId,
+        password,
+      });
+
+      // Store token in localStorage
+      localStorage.setItem('auth-token', response.data.token);
+
+      // Fetch user profile
+      const profileResponse = await api.get('/profile');
+      localStorage.setItem('user', JSON.stringify(profileResponse.data));
+
+      // Redirect based on role
+      if (profileResponse.data.role === 'admin') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch (err) {
+      console.error('Sign in error:', err);
+      setError(err.response?.data?.message || 'Invalid ID or password');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <BookingWrapper subTitle= "Sign In">
+    <BookingWrapper subTitle="Sign In">
       <div className="flex flex-col justify-center items-center w-full min-h-screen px-6">
         <div className="w-full max-w-xl bg-white p-10 rounded-md shadow-md">
           <h2 className="text-2xl font-bold text-center mb-8 text-gray-800">
@@ -33,8 +64,17 @@ const SignIn = () => {
           </h2>
 
           <form onSubmit={handleSignIn} className="space-y-6">
+            {error && (
+              <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
             <div>
-              <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="studentId"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Student ID
               </label>
               <input
@@ -54,7 +94,10 @@ const SignIn = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Password
               </label>
               <input
@@ -70,14 +113,17 @@ const SignIn = () => {
 
             <button
               type="submit"
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+              disabled={loading}
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign In
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
 
             <div className="text-center">
               <Link href="/forgot-password">
-                <span className="text-blue-600 hover:underline text-sm">Forgot Password?</span>
+                <span className="text-blue-600 hover:underline text-sm">
+                  Forgot Password?
+                </span>
               </Link>
             </div>
 
