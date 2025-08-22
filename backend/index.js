@@ -25,5 +25,13 @@ sequelize.sync({ alter: true }) // auto create/update tables
   .then(() => console.log("✅ Models synced"))
   .catch(err => console.error("❌ Sync error:", err));
 
+const express = require('express');
+const app = express();
+
+// Middleware, routes, etc.
+app.use(express.json());
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(Server running on port ${PORT});
+});
