@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardWrapper from '@/components/DashboardWrapper';
+import { Plus } from 'lucide-react';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -28,6 +29,18 @@ export default function ProfilePage() {
     router.push('/dashboard/profile/edit-password');
   };
 
+  const profileData = {
+    firstName: 'John',
+    lastName: 'Doe',
+    id: 'STU2024001',
+    gender: 'Male',
+    email: 'john.doe@example.com',
+    contactNumber: '+233 24 123 4567',
+    programOfStudy: 'BSc. Computer Science',
+    level: '300',
+    profilePhoto: null
+  }
+
   return (
     <DashboardWrapper>
       <div className="max-w-3xl mx-auto p-6 space-y-6">
@@ -42,20 +55,7 @@ export default function ProfilePage() {
               />
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-10 w-10"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
+                <Plus size={40} />
                 <span className="text-sm">Add Photo</span>
               </div>
             )}
@@ -70,71 +70,49 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Profile Form */}
-        <form className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="First Name"
-              className="p-3 border rounded"
-              name="firstName"
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              className="p-3 border rounded"
-              name="lastName"
-            />
+        {/* Profile */}
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-5 my-20'>
+          <div className='flex flex-col'>
+            <div className='font-bold'>First Name:</div>
+            <div>{profileData.firstName}</div>
           </div>
 
-          <input
-            type="text"
-            placeholder="Student ID"
-            className="p-3 border rounded w-full"
-            name="studentId"
-          />
+          <div className='flex flex-col'>
+            <div className='font-bold'>Last Name:</div>
+            <div>{profileData.lastName}</div>
+          </div>
 
-          <select
-            className="p-3 border rounded w-full"
-            name="gender"
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select Gender
-            </option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
+          <div className='flex flex-col'>
+            <div className='font-bold'>ID:</div>
+            <div>{profileData.id}</div>
+          </div>
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="p-3 border rounded w-full"
-            name="email"
-          />
+          <div className='flex flex-col'>
+            <div className='font-bold'>Gender:</div>
+            <div>{profileData.gender}</div>
+          </div>
 
-          <input
-            type="tel"
-            placeholder="Contact Number"
-            className="p-3 border rounded w-full"
-            name="contactNumber"
-          />
+          <div className='flex flex-col'>
+            <div className='font-bold'>email:</div>
+            <div>{profileData.email}</div>
+          </div>
 
-          <input
-            type="text"
-            placeholder="Program of Study"
-            className="p-3 border rounded w-full"
-            name="program"
-          />
+          <div className='flex flex-col'>
+            <div className='font-bold'>Contact Number:</div>
+            <div>{profileData.contactNumber}</div>
+          </div>
 
-          <input
-            type="text"
-            placeholder="Level"
-            className="p-3 border rounded w-full"
-            name="level"
-          />
-        </form>
+          <div className='flex flex-col'>
+            <div className='font-bold'>Program Of Study:</div>
+            <div>{profileData.programOfStudy}</div>
+          </div>
+
+          <div className='flex flex-col'>
+            <div className='font-bold'>Level:</div>
+            <div>{profileData.level}</div>
+          </div>
+        </div>
+
 
         {/* Action Buttons */}
         <div className="flex gap-4">
