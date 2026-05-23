@@ -23,7 +23,7 @@ exports.createFaultReport = async (req, res) => {
 exports.getStudentFaultReports = async (req, res) => {
   try {
     const { student_id } = req.params;
-    const [reports] = await db.query(
+    const reports = await db.query(
       'SELECT * FROM Fault_Report WHERE student_id = ? ORDER BY report_date DESC',
       [student_id]
     );

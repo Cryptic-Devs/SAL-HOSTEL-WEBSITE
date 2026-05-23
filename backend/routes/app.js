@@ -1,5 +1,9 @@
-const userRoutes = require('./routes/userRoutes');
-const roomRoutes = require('./routes/roomRoutes');
+const express = require('express');
+const router = express.Router();
+const userRoutes = require('./userRoutes');
+const roomRoutes = require('./roomRoutes');
 
-app.use('/api/user', userRoutes);
-app.use('/api/rooms', roomRoutes);
+router.use('/user', userRoutes);
+router.use('/rooms', roomRoutes);
+
+module.exports = router;

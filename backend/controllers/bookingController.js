@@ -205,6 +205,29 @@ class BookingController {
     }
   }
 
+  static async assignBooking(req, res) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+
+      if (!['Approved', 'Rejected', 'Completed'].includes(status)) {
+        return res.status(400).json({ success: false, message: 'Invalid status value' });
+      }
+
+      const query = 'UPDATE Booking SET status = ? WHERE booking_id = ?';
+      const result = await db.query(query, [status, id]);
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ success: false, message: 'Booking not found' });
+      }
+
+      res.json({ success: true, message: 'Booking updated successfully', booking_id: id, status });
+    } catch (error) {
+      console.error('Assign booking error:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+
   static async sendBookingConfirmationEmail(studentId, bookingId) {
     try {
       const studentQuery = `

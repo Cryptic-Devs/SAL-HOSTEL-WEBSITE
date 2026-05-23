@@ -1,8 +1,15 @@
 const express = require('express');
 const mysql = require('mysql2');
-const { authMiddleware } = require('./middleware/auth');
+const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
+
+const requireRole = (role) => (req, res, next) => {
+  if (!req.user || req.user.user_type !== role) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+  next();
+};
 
 // ===== DB CONNECTION =====
 const db = mysql.createConnection({
@@ -18,9 +25,9 @@ db.connect(err => {
 });
 
 // ===== CREATE COMPLAINT (STUDENT) =====
-router.post('/complaints', authMiddleware('student'), (req, res) => {
+router.post('/complaints', authenticateToken, requireRole('student'), (req, res) => {
     const { title, description } = req.body;
-    const user_id = req.user.id; // from JWT
+    const user_id = req.user.user_id; // from JWT
 
     if (!title || !description) {
         return res.status(400).json({ error: 'Missing required fields' });
@@ -34,16 +41,16 @@ router.post('/complaints', authMiddleware('student'), (req, res) => {
 });
 
 // ===== GET MY COMPLAINTS (STUDENT) =====
-router.get('/complaints/my', authMiddleware('student'), (req, res) => {
+router.get('/complaints/my', authenticateToken, requireRole('student'), (req, res) => {
     const sql = 'SELECT * FROM complaints WHERE user_id = ?';
-    db.query(sql, [req.user.id], (err, results) => {
+    db.query(sql, [req.user.user_id], (err, results) => {
         if (err) throw err;
         res.json(results);
     });
 });
 
 // ===== GET ALL COMPLAINTS (ADMIN) =====
-router.get('/complaints', authMiddleware('admin'), (req, res) => {
+router.get('/complaints', authenticateToken, requireRole('admin'), (req, res) => {
     const sql = 'SELECT * FROM complaints ORDER BY created_at DESC';
     db.query(sql, (err, results) => {
         if (err) throw err;
@@ -52,7 +59,7 @@ router.get('/complaints', authMiddleware('admin'), (req, res) => {
 });
 
 // ===== UPDATE COMPLAINT STATUS (ADMIN) =====
-router.put('/complaints/:id', authMiddleware('admin'), (req, res) => {
+router.put('/complaints/:id', authenticateToken, requireRole('admin'), (req, res) => {
     const { status } = req.body;
     if (!status) {
         return res.status(400).json({ error: 'Status is required' });
@@ -65,7 +72,7 @@ router.put('/complaints/:id', authMiddleware('admin'), (req, res) => {
 });
 
 // ===== DELETE COMPLAINT (ADMIN) =====
-router.delete('/complaints/:id', authMiddleware('admin'), (req, res) => {
+router.delete('/complaints/:id', authenticateToken, requireRole('admin'), (req, res) => {
     const sql = 'DELETE FROM complaints WHERE id = ?';
     db.query(sql, [req.params.id], (err) => {
         if (err) throw err;

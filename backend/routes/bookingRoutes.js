@@ -1,9 +1,9 @@
 const express = require('express');
-const { createBooking, assignBooking } = require('../controllers/bookingController');
-const { protect, adminOnly } = require('../middleware/authMiddleware');
+const BookingController = require('../controllers/bookingController');
+const { authenticateToken, adminOnly } = require('../middleware/auth');
 const router = express.Router();
 
-router.post('/', protect, createBooking);
-router.put('/assign/:id', protect, adminOnly, assignBooking);
+router.post('/', authenticateToken, BookingController.requestBooking);
+router.put('/assign/:id', authenticateToken, adminOnly, BookingController.assignBooking);
 
 module.exports = router;

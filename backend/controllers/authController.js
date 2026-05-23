@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../models/database');
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 class AuthController {
   // User Registration (Student, Admin, Staff)
@@ -157,6 +157,8 @@ class AuthController {
         query = `SELECT admin_id, name, email, phone_number, role FROM Admin WHERE admin_id = ?`;
       } else if (user_type === 'staff') {
         query = `SELECT staff_id, name, email, phone_number, role, department, date_hired FROM Staff WHERE staff_id = ?`;
+      } else {
+        return res.status(400).json({ success: false, message: 'Invalid user type' });
       }
 
       const users = await db.query(query, [user_id]);

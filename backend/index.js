@@ -19,20 +19,26 @@ app.use('/api/rooms', roomRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api', apiRoutes);
 
-// ✅ Test DB connection & sync models
-sequelize.authenticate()
-  .then(() => console.log("✅ MySQL connected"))
-  .catch(err => console.error("❌ DB connection error:", err));
+app.get('/', (req, res) => res.send('Backend is running!'));
 
-sequelize.sync({ alter: true }) // auto create/update tables
-  .then(() => console.log("✅ Models synced"))
-  .catch(err => console.error("❌ Sync error:", err));
+// Load Sequelize models so sync can register them
+require('./models/Room');
+require('./models/User');
+require('./models/Bookings');
 
-// ✅ Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
 
-  app.get('/', (req, res) => res.send('Backend is running!'));
-
-});
+// ✅ Test DB connection & sync models before starting the server
+sequelize.authenticate()
+  .then(() => console.log('✅ MySQL connected'))
+  .then(() => sequelize.sync({ alter: true }))
+  .then(() => console.log('✅ Models synced'))
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error('❌ DB startup error:', err);
+    process.exit(1);
+  });

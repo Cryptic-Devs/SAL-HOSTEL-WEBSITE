@@ -1,6 +1,6 @@
 const express = require('express');
 const { createRoom, getRooms, getRoom, updateRoom, deleteRoom } = require('../controllers/roomController');
-const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { authenticateToken, adminOnly } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -9,8 +9,8 @@ router.get('/', getRooms);
 router.get('/:id', getRoom);
 
 // Admin: Manage rooms
-router.post('/', protect, adminOnly, createRoom);
-router.put('/:id', protect, adminOnly, updateRoom);
-router.delete('/:id', protect, adminOnly, deleteRoom);
+router.post('/', authenticateToken, adminOnly, createRoom);
+router.put('/:id', authenticateToken, adminOnly, updateRoom);
+router.delete('/:id', authenticateToken, adminOnly, deleteRoom);
 
 module.exports = router;

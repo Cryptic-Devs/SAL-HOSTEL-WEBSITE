@@ -33,3 +33,6 @@ const Room = sequelize.define('Room', {
 });
 
 module.exports = Room;
+
+console.log("Loading Room model...");
+ // should not error
